@@ -5,9 +5,9 @@
 }
 
 :root {
-    --left-width: 300px;
-    --right-width: 300px;
-    --center-width: 500px;
+    --left-width: 20%;
+    --right-width: 20%;
+    --center-width: 60%;
     --left-top-height: 70%;
     --left-bottom-height: 30%;
     --scale: 100%;
@@ -42,14 +42,14 @@ body {
 }
 
 .left-svg-top {
-    width: var(--left-width);
+    width: 100%;
     height: var(--left-top-height);
     object-fit: contain;
     object-position: left center;
 }
 
 .left-svg-bottom {
-    width: var(--left-width);
+    width: 100%;
     height: var(--left-bottom-height);
     object-fit: contain;
     object-position: left center;
@@ -68,8 +68,8 @@ body {
 }
 
 .center-svg {
-    width: var(--center-width);
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
     object-position: center;
 }
@@ -165,8 +165,79 @@ body {
     background: #45b7d1;
 }
 
+/* 小度智能屏专用优化 */
+@media screen and (max-width: 1920px) and (min-width: 1024px) and (orientation: landscape) {
+    :root {
+        --left-width: 18%;
+        --right-width: 18%;
+        --center-width: 64%;
+        --scale: 90%;
+    }
+    
+    .adjustment-panel {
+        top: 10px;
+        right: 10px;
+        padding: 15px;
+        min-width: 200px;
+        font-size: 12px;
+    }
+    
+    .adjustment-panel h3 {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+    
+    .control-group {
+        margin-bottom: 10px;
+    }
+    
+    .control-group label {
+        font-size: 12px;
+    }
+}
+
+/* 小度智能屏小尺寸优化 */
+@media screen and (max-width: 1024px) and (orientation: landscape) {
+    :root {
+        --left-width: 15%;
+        --right-width: 15%;
+        --center-width: 70%;
+        --scale: 80%;
+    }
+    
+    .adjustment-panel {
+        position: fixed;
+        top: 5px;
+        right: 5px;
+        padding: 10px;
+        min-width: 180px;
+        font-size: 11px;
+        z-index: 1000;
+    }
+    
+    .adjustment-panel h3 {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .control-group {
+        margin-bottom: 8px;
+    }
+    
+    .control-group label {
+        font-size: 11px;
+    }
+    
+    .adjustment-panel button {
+        padding: 6px 12px;
+        font-size: 11px;
+        margin-right: 5px;
+        margin-top: 5px;
+    }
+}
+
 /* 响应式设计 */
-@media (max-width: 1280px) {
+@media (max-width: 1280px) and (orientation: portrait) {
     .main-container {
         flex-direction: column;
     }

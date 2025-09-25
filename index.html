@@ -35,18 +35,18 @@
         <h3>手工调整面板</h3>
         
         <div class="control-group">
-            <label>左侧宽度: <span id="left-width-value">300</span>px</label>
-            <input type="range" id="left-width" min="200" max="500" value="300">
+            <label>左侧宽度: <span id="left-width-value">20</span>%</label>
+            <input type="range" id="left-width" min="10" max="30" value="20">
         </div>
         
         <div class="control-group">
-            <label>右侧宽度: <span id="right-width-value">300</span>px</label>
-            <input type="range" id="right-width" min="200" max="500" value="300">
+            <label>右侧宽度: <span id="right-width-value">20</span>%</label>
+            <input type="range" id="right-width" min="10" max="30" value="20">
         </div>
         
         <div class="control-group">
-            <label>中部宽度: <span id="center-width-value">auto</span></label>
-            <input type="range" id="center-width" min="300" max="800" value="500">
+            <label>中部宽度: <span id="center-width-value">60</span>%</label>
+            <input type="range" id="center-width" min="40" max="80" value="60">
         </div>
         
         <div class="control-group">
@@ -73,19 +73,19 @@
         function updateLeftWidth() {
             const value = document.getElementById('left-width').value;
             document.getElementById('left-width-value').textContent = value;
-            document.documentElement.style.setProperty('--left-width', value + 'px');
+            document.documentElement.style.setProperty('--left-width', value + '%');
         }
         
         function updateRightWidth() {
             const value = document.getElementById('right-width').value;
             document.getElementById('right-width-value').textContent = value;
-            document.documentElement.style.setProperty('--right-width', value + 'px');
+            document.documentElement.style.setProperty('--right-width', value + '%');
         }
         
         function updateCenterWidth() {
             const value = document.getElementById('center-width').value;
-            document.getElementById('center-width-value').textContent = value + 'px';
-            document.documentElement.style.setProperty('--center-width', value + 'px');
+            document.getElementById('center-width-value').textContent = value;
+            document.documentElement.style.setProperty('--center-width', value + '%');
         }
         
         function updateLeftTopHeight() {
@@ -107,9 +107,9 @@
         }
         
         function resetAdjustments() {
-            document.getElementById('left-width').value = 300;
-            document.getElementById('right-width').value = 300;
-            document.getElementById('center-width').value = 500;
+            document.getElementById('left-width').value = 20;
+            document.getElementById('right-width').value = 20;
+            document.getElementById('center-width').value = 60;
             document.getElementById('left-top-height').value = 70;
             document.getElementById('left-bottom-height').value = 30;
             document.getElementById('scale').value = 100;
@@ -133,7 +133,7 @@
             const css = `
 /* 左侧SVG */
 .sidebar-left {
-    width: ${leftWidth}px;
+    width: ${leftWidth}%;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -156,7 +156,7 @@
 
 /* 中央主内容区 */
 .main-content {
-    width: ${centerWidth}px;
+    width: ${centerWidth}%;
     height: 100vh;
     display: flex;
     align-items: center;
@@ -174,7 +174,7 @@
 
 /* 右侧SVG */
 .sidebar-right {
-    width: ${rightWidth}px;
+    width: ${rightWidth}%;
     height: 100vh;
     display: flex;
     align-items: center;
