@@ -45,7 +45,7 @@ body {
 .left-svg {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     object-position: left center;
     background: transparent;
 }
@@ -97,6 +97,12 @@ body {
     max-width: 100%;
     max-height: 100%;
     display: block;
+}
+
+/* 确保SVG只显示灰色部分，白色背景透明 */
+.main-container img[src$=".svg"] {
+    background: transparent !important;
+    mix-blend-mode: multiply;
 }
 
 /* 手工调整面板 */
