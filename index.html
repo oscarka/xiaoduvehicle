@@ -14,43 +14,76 @@
         
         <!-- 左侧SVG -->
         <div class="sidebar-left">
-            <img src="左侧.svg" alt="左侧" class="left-svg">
+            <div class="draggable-element" id="left-element">
+                <img src="左侧.svg" alt="左侧" class="left-svg">
+                <div class="resize-handles">
+                    <div class="resize-handle resize-handle-nw"></div>
+                    <div class="resize-handle resize-handle-ne"></div>
+                    <div class="resize-handle resize-handle-sw"></div>
+                    <div class="resize-handle resize-handle-se"></div>
+                </div>
+            </div>
         </div>
         
         <!-- 中央主内容区 -->
         <div class="main-content">
-            <img src="中部.svg" alt="中部" class="center-svg">
+            <div class="draggable-element" id="center-element">
+                <img src="中部.svg" alt="中部" class="center-svg">
+                <div class="resize-handles">
+                    <div class="resize-handle resize-handle-nw"></div>
+                    <div class="resize-handle resize-handle-ne"></div>
+                    <div class="resize-handle resize-handle-sw"></div>
+                    <div class="resize-handle resize-handle-se"></div>
+                </div>
+            </div>
         </div>
         
         <!-- 右侧SVG -->
         <div class="sidebar-right">
-            <img src="右侧.svg" alt="右侧" class="right-svg">
+            <div class="draggable-element" id="right-element">
+                <img src="右侧.svg" alt="右侧" class="right-svg">
+                <div class="resize-handles">
+                    <div class="resize-handle resize-handle-nw"></div>
+                    <div class="resize-handle resize-handle-ne"></div>
+                    <div class="resize-handle resize-handle-sw"></div>
+                    <div class="resize-handle resize-handle-se"></div>
+                </div>
+            </div>
         </div>
         
     </div>
     
     <!-- 手工调整面板 -->
     <div class="adjustment-panel">
-        <h3>手工调整面板</h3>
+        <h3>元素调整面板</h3>
         
-        <div class="control-group">
-            <label>左侧宽度: <span id="left-width-value">200</span>px</label>
-            <input type="range" id="left-width" min="150" max="300" value="200" step="5">
+        <div class="element-selector">
+            <label>选择元素:</label>
+            <select id="element-selector">
+                <option value="left-element">左侧元素</option>
+                <option value="center-element">中部元素</option>
+                <option value="right-element">右侧元素</option>
+            </select>
         </div>
         
         <div class="control-group">
-            <label>右侧宽度: <span id="right-width-value">240</span>px</label>
-            <input type="range" id="right-width" min="180" max="320" value="240" step="5">
+            <label>X位置: <span id="position-x-value">0</span>px</label>
+            <input type="range" id="position-x" min="-200" max="200" value="0" step="5">
         </div>
         
         <div class="control-group">
-            <label>中部宽度: <span id="center-width-value">520</span>px</label>
-            <input type="range" id="center-width" min="400" max="600" value="520" step="5">
+            <label>Y位置: <span id="position-y-value">0</span>px</label>
+            <input type="range" id="position-y" min="-200" max="200" value="0" step="5">
         </div>
         
         <div class="control-group">
-            <label>中部中轴线偏移: <span id="center-offset-value">0</span>px</label>
-            <input type="range" id="center-offset" min="-100" max="100" value="0" step="5">
+            <label>宽度: <span id="element-width-value">200</span>px</label>
+            <input type="range" id="element-width" min="100" max="500" value="200" step="5">
+        </div>
+        
+        <div class="control-group">
+            <label>高度: <span id="element-height-value">auto</span></label>
+            <input type="range" id="element-height" min="100" max="600" value="400" step="5">
         </div>
         
         <div class="control-group">
@@ -58,135 +91,221 @@
             <input type="range" id="scale" min="50" max="150" value="100">
         </div>
         
-        <button onclick="resetAdjustments()">重置</button>
+        <button onclick="resetElement()">重置当前元素</button>
+        <button onclick="resetAllElements()">重置所有元素</button>
         <button onclick="copyCSS()">复制CSS</button>
     </div>
     
     <script>
-        // 实时调整功能
-        function updateLeftWidth() {
-            const value = document.getElementById('left-width').value;
-            document.getElementById('left-width-value').textContent = value;
-            document.documentElement.style.setProperty('--left-width', value + 'px');
+        // 元素数据存储
+        const elementData = {
+            'left-element': { x: 0, y: 0, width: 200, height: 'auto' },
+            'center-element': { x: 0, y: 0, width: 520, height: 'auto' },
+            'right-element': { x: 0, y: 0, width: 240, height: 'auto' }
+        };
+        
+        let currentElement = 'left-element';
+        let isDragging = false;
+        let isResizing = false;
+        let dragStart = { x: 0, y: 0 };
+        let resizeStart = { x: 0, y: 0, width: 0, height: 0 };
+        
+        // 更新当前选中的元素
+        function updateCurrentElement() {
+            currentElement = document.getElementById('element-selector').value;
+            updatePanelValues();
+            highlightCurrentElement();
         }
         
-        function updateRightWidth() {
-            const value = document.getElementById('right-width').value;
-            document.getElementById('right-width-value').textContent = value;
-            document.documentElement.style.setProperty('--right-width', value + 'px');
+        // 更新面板值
+        function updatePanelValues() {
+            const data = elementData[currentElement];
+            document.getElementById('position-x').value = data.x;
+            document.getElementById('position-y').value = data.y;
+            document.getElementById('element-width').value = data.width;
+            document.getElementById('element-height').value = data.height === 'auto' ? 400 : data.height;
+            
+            document.getElementById('position-x-value').textContent = data.x;
+            document.getElementById('position-y-value').textContent = data.y;
+            document.getElementById('element-width-value').textContent = data.width;
+            document.getElementById('element-height-value').textContent = data.height;
         }
         
-        function updateCenterWidth() {
-            const value = document.getElementById('center-width').value;
-            document.getElementById('center-width-value').textContent = value;
-            document.documentElement.style.setProperty('--center-width', value + 'px');
+        // 高亮当前元素
+        function highlightCurrentElement() {
+            document.querySelectorAll('.draggable-element').forEach(el => el.classList.remove('active'));
+            document.getElementById(currentElement).classList.add('active');
         }
         
-        function updateCenterOffset() {
-            const value = document.getElementById('center-offset').value;
-            document.getElementById('center-offset-value').textContent = value;
-            document.documentElement.style.setProperty('--center-offset', value + 'px');
+        // 应用元素位置和大小
+        function applyElementStyle(elementId) {
+            const element = document.getElementById(elementId);
+            const data = elementData[elementId];
+            
+            element.style.transform = `translate(${data.x}px, ${data.y}px)`;
+            element.style.width = data.width + 'px';
+            if (data.height !== 'auto') {
+                element.style.height = data.height + 'px';
+            } else {
+                element.style.height = 'auto';
+            }
         }
         
+        // 更新位置
+        function updatePositionX() {
+            const value = parseInt(document.getElementById('position-x').value);
+            elementData[currentElement].x = value;
+            document.getElementById('position-x-value').textContent = value;
+            applyElementStyle(currentElement);
+        }
         
+        function updatePositionY() {
+            const value = parseInt(document.getElementById('position-y').value);
+            elementData[currentElement].y = value;
+            document.getElementById('position-y-value').textContent = value;
+            applyElementStyle(currentElement);
+        }
+        
+        // 更新大小
+        function updateElementWidth() {
+            const value = parseInt(document.getElementById('element-width').value);
+            elementData[currentElement].width = value;
+            document.getElementById('element-width-value').textContent = value;
+            applyElementStyle(currentElement);
+        }
+        
+        function updateElementHeight() {
+            const value = parseInt(document.getElementById('element-height').value);
+            elementData[currentElement].height = value;
+            document.getElementById('element-height-value').textContent = value;
+            applyElementStyle(currentElement);
+        }
+        
+        // 整体缩放
         function updateScale() {
             const value = document.getElementById('scale').value;
             document.getElementById('scale-value').textContent = value;
             document.documentElement.style.setProperty('--scale', value + '%');
         }
         
-        function resetAdjustments() {
-            document.getElementById('left-width').value = 200;
-            document.getElementById('right-width').value = 240;
-            document.getElementById('center-width').value = 520;
-            document.getElementById('center-offset').value = 0;
-            document.getElementById('scale').value = 100;
+        // 重置当前元素
+        function resetElement() {
+            const defaultData = {
+                'left-element': { x: 0, y: 0, width: 200, height: 'auto' },
+                'center-element': { x: 0, y: 0, width: 520, height: 'auto' },
+                'right-element': { x: 0, y: 0, width: 240, height: 'auto' }
+            };
             
-            updateLeftWidth();
-            updateRightWidth();
-            updateCenterWidth();
-            updateCenterOffset();
-            updateScale();
+            elementData[currentElement] = { ...defaultData[currentElement] };
+            updatePanelValues();
+            applyElementStyle(currentElement);
         }
         
-        function copyCSS() {
-            const leftWidth = document.getElementById('left-width').value;
-            const rightWidth = document.getElementById('right-width').value;
-            const centerWidth = document.getElementById('center-width').value;
-            const centerOffset = document.getElementById('center-offset').value;
-            const scale = document.getElementById('scale').value;
+        // 重置所有元素
+        function resetAllElements() {
+            elementData['left-element'] = { x: 0, y: 0, width: 200, height: 'auto' };
+            elementData['center-element'] = { x: 0, y: 0, width: 520, height: 'auto' };
+            elementData['right-element'] = { x: 0, y: 0, width: 240, height: 'auto' };
             
-            const css = `
-/* 左侧SVG */
-.sidebar-left {
-    width: ${leftWidth}px;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-}
-
-.left-svg {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    object-position: left top;
-}
-
-/* 中央主内容区 */
-.main-content {
-    width: ${centerWidth}px;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    background: #fafbfc;
-    transform: translateX(${centerOffset}px);
-}
-
-.center-svg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-}
-
-/* 右侧SVG */
-.sidebar-right {
-    width: ${rightWidth}px;
-    height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-end;
-    position: relative;
-}
-
-.right-svg {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    object-position: right top;
-}
-            `;
+            Object.keys(elementData).forEach(id => applyElementStyle(id));
+            updatePanelValues();
+        }
+        
+        // 复制CSS
+        function copyCSS() {
+            const scale = document.getElementById('scale').value;
+            let css = `:root { --scale: ${scale}%; }\n\n`;
+            
+            Object.keys(elementData).forEach(id => {
+                const data = elementData[id];
+                css += `#${id} {\n`;
+                css += `    transform: translate(${data.x}px, ${data.y}px);\n`;
+                css += `    width: ${data.width}px;\n`;
+                css += `    height: ${data.height === 'auto' ? 'auto' : data.height + 'px'};\n`;
+                css += `}\n\n`;
+            });
             
             navigator.clipboard.writeText(css).then(() => {
                 alert('CSS已复制到剪贴板！');
             });
         }
         
+        // 拖拽功能
+        function initDragAndResize() {
+            document.querySelectorAll('.draggable-element').forEach(element => {
+                // 拖拽功能
+                element.addEventListener('mousedown', (e) => {
+                    if (e.target.classList.contains('resize-handle')) return;
+                    
+                    isDragging = true;
+                    currentElement = element.id;
+                    updateCurrentElement();
+                    
+                    dragStart.x = e.clientX - elementData[currentElement].x;
+                    dragStart.y = e.clientY - elementData[currentElement].y;
+                    
+                    element.style.cursor = 'grabbing';
+                });
+                
+                // 调整大小功能
+                element.querySelectorAll('.resize-handle').forEach(handle => {
+                    handle.addEventListener('mousedown', (e) => {
+                        e.stopPropagation();
+                        isResizing = true;
+                        currentElement = element.id;
+                        updateCurrentElement();
+                        
+                        resizeStart.x = e.clientX;
+                        resizeStart.y = e.clientY;
+                        resizeStart.width = elementData[currentElement].width;
+                        resizeStart.height = elementData[currentElement].height === 'auto' ? 400 : elementData[currentElement].height;
+                    });
+                });
+            });
+            
+            // 全局鼠标事件
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const newX = e.clientX - dragStart.x;
+                    const newY = e.clientY - dragStart.y;
+                    
+                    elementData[currentElement].x = newX;
+                    elementData[currentElement].y = newY;
+                    
+                    applyElementStyle(currentElement);
+                    updatePanelValues();
+                } else if (isResizing) {
+                    const deltaX = e.clientX - resizeStart.x;
+                    const deltaY = e.clientY - resizeStart.y;
+                    
+                    elementData[currentElement].width = Math.max(50, resizeStart.width + deltaX);
+                    elementData[currentElement].height = Math.max(50, resizeStart.height + deltaY);
+                    
+                    applyElementStyle(currentElement);
+                    updatePanelValues();
+                }
+            });
+            
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                isResizing = false;
+                document.querySelectorAll('.draggable-element').forEach(el => {
+                    el.style.cursor = 'move';
+                });
+            });
+        }
+        
         // 绑定事件
-        document.getElementById('left-width').addEventListener('input', updateLeftWidth);
-        document.getElementById('right-width').addEventListener('input', updateRightWidth);
-        document.getElementById('center-width').addEventListener('input', updateCenterWidth);
-        document.getElementById('center-offset').addEventListener('input', updateCenterOffset);
+        document.getElementById('element-selector').addEventListener('change', updateCurrentElement);
+        document.getElementById('position-x').addEventListener('input', updatePositionX);
+        document.getElementById('position-y').addEventListener('input', updatePositionY);
+        document.getElementById('element-width').addEventListener('input', updateElementWidth);
+        document.getElementById('element-height').addEventListener('input', updateElementHeight);
         document.getElementById('scale').addEventListener('input', updateScale);
         
         // 初始化
-        updateLeftWidth();
-        updateRightWidth();
-        updateCenterWidth();
-        updateCenterOffset();
+        initDragAndResize();
+        updateCurrentElement();
         updateScale();
     </script>
 </body>

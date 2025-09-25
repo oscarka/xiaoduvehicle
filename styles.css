@@ -94,6 +94,68 @@ body {
     background: transparent;
 }
 
+/* 可拖拽元素 */
+.draggable-element {
+    position: relative;
+    cursor: move;
+    user-select: none;
+}
+
+.draggable-element:hover .resize-handles {
+    opacity: 1;
+}
+
+.draggable-element.active {
+    outline: 2px solid #4ecdc4;
+    outline-offset: 2px;
+}
+
+/* 调整大小手柄 */
+.resize-handles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+
+.resize-handle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #4ecdc4;
+    border: 1px solid white;
+    pointer-events: all;
+    cursor: nw-resize;
+}
+
+.resize-handle-nw {
+    top: -4px;
+    left: -4px;
+    cursor: nw-resize;
+}
+
+.resize-handle-ne {
+    top: -4px;
+    right: -4px;
+    cursor: ne-resize;
+}
+
+.resize-handle-sw {
+    bottom: -4px;
+    left: -4px;
+    cursor: sw-resize;
+}
+
+.resize-handle-se {
+    bottom: -4px;
+    right: -4px;
+    cursor: se-resize;
+}
+
 /* SVG优化 - 确保SVG不会因为固定尺寸影响布局 */
 .main-container img {
     max-width: 100%;
@@ -105,6 +167,26 @@ body {
 .main-container img[src$=".svg"] {
     background: transparent !important;
     mix-blend-mode: multiply;
+}
+
+/* 元素选择器样式 */
+.element-selector {
+    margin-bottom: 15px;
+}
+
+.element-selector label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #666;
+}
+
+.element-selector select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
 }
 
 /* 手工调整面板 */
