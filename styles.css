@@ -5,11 +5,9 @@
 }
 
 :root {
-    --left-width: 20%;
-    --right-width: 20%;
-    --center-width: 60%;
-    --left-top-height: 70%;
-    --left-bottom-height: 30%;
+    --left-width: 26.7%;
+    --right-width: 30.1%;
+    --center-width: 47.5%;
     --scale: 100%;
 }
 
@@ -44,18 +42,10 @@ body {
     overflow: hidden;
 }
 
-.left-svg-top {
+.left-svg {
     width: 100%;
-    height: var(--left-top-height);
-    object-fit: cover;
-    object-position: left center;
-    background: transparent;
-}
-
-.left-svg-bottom {
-    width: 100%;
-    height: var(--left-bottom-height);
-    object-fit: cover;
+    height: 100%;
+    object-fit: contain;
     object-position: left center;
     background: transparent;
 }
@@ -186,9 +176,9 @@ body {
 /* 小度智能屏专用优化 */
 @media screen and (max-width: 1920px) and (min-width: 1024px) and (orientation: landscape) {
     :root {
-        --left-width: 18%;
-        --right-width: 18%;
-        --center-width: 64%;
+        --left-width: 24%;
+        --right-width: 28%;
+        --center-width: 48%;
         --scale: 90%;
     }
     
@@ -217,9 +207,9 @@ body {
 /* 小度智能屏小尺寸优化 */
 @media screen and (max-width: 1024px) and (orientation: landscape) {
     :root {
-        --left-width: 15%;
-        --right-width: 15%;
-        --center-width: 70%;
+        --left-width: 22%;
+        --right-width: 26%;
+        --center-width: 52%;
         --scale: 80%;
     }
     

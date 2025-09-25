@@ -14,8 +14,7 @@
         
         <!-- 左侧SVG -->
         <div class="sidebar-left">
-            <img src="左侧上.svg" alt="左侧上" class="left-svg-top">
-            <img src="左侧下.svg" alt="左侧下" class="left-svg-bottom">
+            <img src="左侧.svg" alt="左侧" class="left-svg">
         </div>
         
         <!-- 中央主内容区 -->
@@ -35,28 +34,18 @@
         <h3>手工调整面板</h3>
         
         <div class="control-group">
-            <label>左侧宽度: <span id="left-width-value">20</span>%</label>
-            <input type="range" id="left-width" min="10" max="30" value="20">
+            <label>左侧宽度: <span id="left-width-value">26.7</span>%</label>
+            <input type="range" id="left-width" min="20" max="35" value="26.7" step="0.1">
         </div>
         
         <div class="control-group">
-            <label>右侧宽度: <span id="right-width-value">20</span>%</label>
-            <input type="range" id="right-width" min="10" max="30" value="20">
+            <label>右侧宽度: <span id="right-width-value">30.1</span>%</label>
+            <input type="range" id="right-width" min="25" max="40" value="30.1" step="0.1">
         </div>
         
         <div class="control-group">
-            <label>中部宽度: <span id="center-width-value">60</span>%</label>
-            <input type="range" id="center-width" min="40" max="80" value="60">
-        </div>
-        
-        <div class="control-group">
-            <label>左侧上部分高度: <span id="left-top-height-value">70</span>%</label>
-            <input type="range" id="left-top-height" min="30" max="90" value="70">
-        </div>
-        
-        <div class="control-group">
-            <label>左侧下部分高度: <span id="left-bottom-height-value">30</span>%</label>
-            <input type="range" id="left-bottom-height" min="10" max="70" value="30">
+            <label>中部宽度: <span id="center-width-value">47.5</span>%</label>
+            <input type="range" id="center-width" min="40" max="55" value="47.5" step="0.1">
         </div>
         
         <div class="control-group">
@@ -88,17 +77,6 @@
             document.documentElement.style.setProperty('--center-width', value + '%');
         }
         
-        function updateLeftTopHeight() {
-            const value = document.getElementById('left-top-height').value;
-            document.getElementById('left-top-height-value').textContent = value;
-            document.documentElement.style.setProperty('--left-top-height', value + '%');
-        }
-        
-        function updateLeftBottomHeight() {
-            const value = document.getElementById('left-bottom-height').value;
-            document.getElementById('left-bottom-height-value').textContent = value;
-            document.documentElement.style.setProperty('--left-bottom-height', value + '%');
-        }
         
         function updateScale() {
             const value = document.getElementById('scale').value;
@@ -107,18 +85,14 @@
         }
         
         function resetAdjustments() {
-            document.getElementById('left-width').value = 20;
-            document.getElementById('right-width').value = 20;
-            document.getElementById('center-width').value = 60;
-            document.getElementById('left-top-height').value = 70;
-            document.getElementById('left-bottom-height').value = 30;
+            document.getElementById('left-width').value = 26.7;
+            document.getElementById('right-width').value = 30.1;
+            document.getElementById('center-width').value = 47.5;
             document.getElementById('scale').value = 100;
             
             updateLeftWidth();
             updateRightWidth();
             updateCenterWidth();
-            updateLeftTopHeight();
-            updateLeftBottomHeight();
             updateScale();
         }
         
@@ -126,8 +100,6 @@
             const leftWidth = document.getElementById('left-width').value;
             const rightWidth = document.getElementById('right-width').value;
             const centerWidth = document.getElementById('center-width').value;
-            const leftTopHeight = document.getElementById('left-top-height').value;
-            const leftBottomHeight = document.getElementById('left-bottom-height').value;
             const scale = document.getElementById('scale').value;
             
             const css = `
@@ -140,18 +112,11 @@
     position: relative;
 }
 
-.left-svg-top {
+.left-svg {
     width: 100%;
-    height: ${leftTopHeight}%;
+    height: 100%;
     object-fit: contain;
-    object-position: center;
-}
-
-.left-svg-bottom {
-    width: 100%;
-    height: ${leftBottomHeight}%;
-    object-fit: contain;
-    object-position: center;
+    object-position: left center;
 }
 
 /* 中央主内容区 */
@@ -199,16 +164,12 @@
         document.getElementById('left-width').addEventListener('input', updateLeftWidth);
         document.getElementById('right-width').addEventListener('input', updateRightWidth);
         document.getElementById('center-width').addEventListener('input', updateCenterWidth);
-        document.getElementById('left-top-height').addEventListener('input', updateLeftTopHeight);
-        document.getElementById('left-bottom-height').addEventListener('input', updateLeftBottomHeight);
         document.getElementById('scale').addEventListener('input', updateScale);
         
         // 初始化
         updateLeftWidth();
         updateRightWidth();
         updateCenterWidth();
-        updateLeftTopHeight();
-        updateLeftBottomHeight();
         updateScale();
     </script>
 </body>
