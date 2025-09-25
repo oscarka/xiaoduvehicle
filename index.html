@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健康保险 Pro - 手工调整版</title>
+    <link rel="stylesheet" href="styles.css?v=20250925_23">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container">
+        
+        <!-- 左侧SVG -->
+        <div class="sidebar-left">
+            <img src="左侧上.svg" alt="左侧上" class="left-svg-top">
+            <img src="左侧下.svg" alt="左侧下" class="left-svg-bottom">
+        </div>
+        
+        <!-- 中央主内容区 -->
+        <div class="main-content">
+            <img src="中部.svg" alt="中部" class="center-svg">
+        </div>
+        
+        <!-- 右侧SVG -->
+        <div class="sidebar-right">
+            <img src="右侧.svg" alt="右侧" class="right-svg">
+        </div>
+        
+    </div>
+    
+    <!-- 手工调整面板 -->
+    <div class="adjustment-panel">
+        <h3>手工调整面板</h3>
+        
+        <div class="control-group">
+            <label>左侧宽度: <span id="left-width-value">300</span>px</label>
+            <input type="range" id="left-width" min="200" max="500" value="300">
+        </div>
+        
+        <div class="control-group">
+            <label>右侧宽度: <span id="right-width-value">300</span>px</label>
+            <input type="range" id="right-width" min="200" max="500" value="300">
+        </div>
+        
+        <div class="control-group">
+            <label>中部宽度: <span id="center-width-value">auto</span></label>
+            <input type="range" id="center-width" min="300" max="800" value="500">
+        </div>
+        
+        <div class="control-group">
+            <label>左侧上部分高度: <span id="left-top-height-value">70</span>%</label>
+            <input type="range" id="left-top-height" min="30" max="90" value="70">
+        </div>
+        
+        <div class="control-group">
+            <label>左侧下部分高度: <span id="left-bottom-height-value">30</span>%</label>
+            <input type="range" id="left-bottom-height" min="10" max="70" value="30">
+        </div>
+        
+        <div class="control-group">
+            <label>整体缩放: <span id="scale-value">100</span>%</label>
+            <input type="range" id="scale" min="50" max="150" value="100">
+        </div>
+        
+        <button onclick="resetAdjustments()">重置</button>
+        <button onclick="copyCSS()">复制CSS</button>
+    </div>
+    
+    <script>
+        // 实时调整功能
+        function updateLeftWidth() {
+            const value = document.getElementById('left-width').value;
+            document.getElementById('left-width-value').textContent = value;
+            document.documentElement.style.setProperty('--left-width', value + 'px');
+        }
+        
+        function updateRightWidth() {
+            const value = document.getElementById('right-width').value;
+            document.getElementById('right-width-value').textContent = value;
+            document.documentElement.style.setProperty('--right-width', value + 'px');
+        }
+        
+        function updateCenterWidth() {
+            const value = document.getElementById('center-width').value;
+            document.getElementById('center-width-value').textContent = value + 'px';
+            document.documentElement.style.setProperty('--center-width', value + 'px');
+        }
+        
+        function updateLeftTopHeight() {
+            const value = document.getElementById('left-top-height').value;
+            document.getElementById('left-top-height-value').textContent = value;
+            document.documentElement.style.setProperty('--left-top-height', value + '%');
+        }
+        
+        function updateLeftBottomHeight() {
+            const value = document.getElementById('left-bottom-height').value;
+            document.getElementById('left-bottom-height-value').textContent = value;
+            document.documentElement.style.setProperty('--left-bottom-height', value + '%');
+        }
+        
+        function updateScale() {
+            const value = document.getElementById('scale').value;
+            document.getElementById('scale-value').textContent = value;
+            document.documentElement.style.setProperty('--scale', value + '%');
+        }
+        
+        function resetAdjustments() {
+            document.getElementById('left-width').value = 300;
+            document.getElementById('right-width').value = 300;
+            document.getElementById('center-width').value = 500;
+            document.getElementById('left-top-height').value = 70;
+            document.getElementById('left-bottom-height').value = 30;
+            document.getElementById('scale').value = 100;
+            
+            updateLeftWidth();
+            updateRightWidth();
+            updateCenterWidth();
+            updateLeftTopHeight();
+            updateLeftBottomHeight();
+            updateScale();
+        }
+        
+        function copyCSS() {
+            const leftWidth = document.getElementById('left-width').value;
+            const rightWidth = document.getElementById('right-width').value;
+            const centerWidth = document.getElementById('center-width').value;
+            const leftTopHeight = document.getElementById('left-top-height').value;
+            const leftBottomHeight = document.getElementById('left-bottom-height').value;
+            const scale = document.getElementById('scale').value;
+            
+            const css = `
+/* 左侧SVG */
+.sidebar-left {
+    width: ${leftWidth}px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.left-svg-top {
+    width: 100%;
+    height: ${leftTopHeight}%;
+    object-fit: contain;
+    object-position: center;
+}
+
+.left-svg-bottom {
+    width: 100%;
+    height: ${leftBottomHeight}%;
+    object-fit: contain;
+    object-position: center;
+}
+
+/* 中央主内容区 */
+.main-content {
+    width: ${centerWidth}px;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: #fafbfc;
+}
+
+.center-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+/* 右侧SVG */
+.sidebar-right {
+    width: ${rightWidth}px;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.right-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+            `;
+            
+            navigator.clipboard.writeText(css).then(() => {
+                alert('CSS已复制到剪贴板！');
+            });
+        }
+        
+        // 绑定事件
+        document.getElementById('left-width').addEventListener('input', updateLeftWidth);
+        document.getElementById('right-width').addEventListener('input', updateRightWidth);
+        document.getElementById('center-width').addEventListener('input', updateCenterWidth);
+        document.getElementById('left-top-height').addEventListener('input', updateLeftTopHeight);
+        document.getElementById('left-bottom-height').addEventListener('input', updateLeftBottomHeight);
+        document.getElementById('scale').addEventListener('input', updateScale);
+        
+        // 初始化
+        updateLeftWidth();
+        updateRightWidth();
+        updateCenterWidth();
+        updateLeftTopHeight();
+        updateLeftBottomHeight();
+        updateScale();
+    </script>
+</body>
+</html>

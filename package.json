@@ -1,0 +1,25 @@
+{
+  "name": "xiaoduvehicle",
+  "version": "1.0.0",
+  "description": "健康保险 Pro - 界面还原项目",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server $PORT",
+    "dev": "python3 -m http.server 8000"
+  },
+  "keywords": [
+    "health-insurance",
+    "svg",
+    "responsive-design",
+    "ui-design"
+  ],
+  "author": "oscarka",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oscarka/xiaoduvehicle.git"
+  },
+  "engines": {
+    "python": ">=3.8"
+  }
+}
